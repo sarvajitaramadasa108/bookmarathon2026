@@ -28,7 +28,7 @@ This is an independent application. It makes **no requests or writes** to Pancha
 
 Registrations are saved in `data/registrations.sqlite` on the server, outside the public directory and excluded from Git. The server returns a success message only after the database insert succeeds. There is no public registration-list or export endpoint.
 
-Deploy this repository to a **Node.js host with a persistent disk**, mounting that disk at the configured database path. A static-only service such as GitHub Pages cannot run the registration API. No production hosting service is configured in this repository.
+The repository now includes a Vercel configuration: `public/` is the static output and `api/registrations.mjs` is the Vercel function entrypoint. Vercel function storage is ephemeral, so production registration persistence requires replacing the SQLite adapter with a managed database or Vercel Blob/Postgres before treating Vercel as the system of record. The current function is useful for testing the deployed flow and returns confirmation references, but it must not be used as the only durable registration store.
 
 Environment variables:
 
