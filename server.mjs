@@ -62,7 +62,7 @@ export async function createApp({ dbPath = process.env.DB_PATH || resolve(root, 
         if (!valid) return json(res, 422, { errors });
         const previous = find.get(input.requestId);
         if (previous) {
-          if (Object.entries(data).some(([key, value]) => previous[key] !== (key === 'consent' ? Number(value) : value))) return json(res, 409, { error: 'Request ID already used' });
+          if (Object.entries(data).some(([key, value]) => key !== 'language' && previous[key] !== (key === 'consent' ? Number(value) : value))) return json(res, 409, { error: 'Request ID already used' });
           return json(res, 200, { reference: previous.reference });
         }
         const reference = `BM26-${randomUUID().slice(0, 8).toUpperCase()}`;

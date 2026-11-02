@@ -55,6 +55,9 @@ test('registrations persist across restart; retries return the same reference', 
     const retry = await post(url, data);
     assert.equal(retry.status, 200);
     assert.deepEqual(await retry.json(), result);
+    const languageRetry = await post(url, { ...data, language: 'en' });
+    assert.equal(languageRetry.status, 200);
+    assert.deepEqual(await languageRetry.json(), result);
     assert.equal((await post(url, { ...data, area: 'Different area' })).status, 409);
     assert.equal((await fetch(`${url}/api/registrations`)).status, 405);
     assert.equal((await fetch(`${url}/data/registrations.sqlite`)).status, 404);
