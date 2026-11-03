@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#082d70"><title>Book Marathon 2026 | Responses</title>
+  <link rel="stylesheet" href="/responses.css"><script type="module" src="/responses.js"></script>
+</head>
+<body>
+  <header class="admin-topbar"><div><p class="eyebrow">HARE KRISHNA VAIKUNTHAM CULTURAL CENTRE</p><h1>Book Marathon 2026 responses</h1></div><a href="/">Registration form ↗</a></header>
+  <main class="admin-main">
+    <section class="access-card" id="access-card">
+      <h2>Open response dashboard</h2><p>Enter the admin key configured in Vercel. This key stays in your browser session and is never stored in the page source.</p>
+      <form id="access-form"><label>Admin key<input id="admin-key" type="password" autocomplete="current-password" required></label><button type="submit">Open responses</button><p class="error" id="access-error" hidden></p></form>
+    </section>
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="dashboard-head"><div><p class="eyebrow">LIVE REGISTRATION LIST</p><h2><span id="count">0</span> responses</h2><p id="status" class="status">Not loaded yet.</p></div><div class="actions"><button id="reload" class="secondary">↻ Reload</button><button id="export" class="primary">⇩ Download Excel</button></div></div>
+      <div class="filters" id="filters"></div>
+      <div class="table-wrap"><table><thead id="table-head"></thead><tbody id="table-body"></tbody></table><div id="empty" class="empty" hidden>No responses match these filters.</div></div>
+    </section>
+  </main>
+</body>
+</html>

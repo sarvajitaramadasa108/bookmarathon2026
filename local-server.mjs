@@ -42,6 +42,14 @@ export async function createApp({ dbPath = process.env.DB_PATH || resolve(root, 
     try {
       const pathname = new URL(req.url, 'http://localhost').pathname;
       if (pathname.startsWith('/api/')) {
+        if (pathname === '/api/responses') {
+          if (req.method !== 'GET') return json(res, 405, { error: 'Method not allowed' }, { Allow: 'GET' });
+          const adminKey = process.env.ADMIN_VIEW_KEY;
+          if (!adminKey) return json(res, 503, { error: 'Admin access is not configured' });
+          if (req.headers['x-admin-key'] !== adminKey) return json(res, 401, { error: 'Invalid admin key' });
+          const rows = db.prepare('SELECT reference AS id, created_at, name, mobile AS whatsapp_mobile, age, gender, area, category, devotee, participation AS availability, language FROM registrations ORDER BY created_at DESC LIMIT 5000').all();
+          return json(res, 200, { rows });
+        }
         if (pathname !== '/api/registrations') return json(res, 404, { error: 'Not found' });
         if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' }, { Allow: 'POST' });
         const origin = req.headers.origin;
