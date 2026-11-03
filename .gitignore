@@ -1,6 +1,7 @@
 data/*
 !data/.gitkeep
 node_modules/
+dist/
 .env
 *.csv
 test-results/

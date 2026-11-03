@@ -5,6 +5,7 @@
   "type": "module",
   "engines": { "node": ">=24.0.0" },
   "scripts": {
+    "build": "node build.mjs",
     "start": "node local-server.mjs",
     "dev": "node --watch local-server.mjs",
     "test": "node --test",
