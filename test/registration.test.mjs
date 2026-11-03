@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createApp } from '../server.mjs';
+import { createApp } from '../local-server.mjs';
 import { copy, devotees, statistics } from '../public/content.js';
 import { validateRegistration } from '../public/validation.js';
 
