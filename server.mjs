@@ -22,10 +22,14 @@ export async function createApp({ dbPath = process.env.DB_PATH || resolve(root, 
     CREATE TABLE IF NOT EXISTS registrations (
       reference TEXT PRIMARY KEY, request_id TEXT NOT NULL UNIQUE, created_at TEXT NOT NULL,
       name TEXT NOT NULL, mobile TEXT NOT NULL, age INTEGER NOT NULL, gender TEXT NOT NULL,
-      area TEXT NOT NULL, devotee TEXT NOT NULL, participation TEXT NOT NULL,
+      area TEXT NOT NULL, category TEXT NOT NULL, devotee TEXT NOT NULL, participation TEXT NOT NULL,
       consent INTEGER NOT NULL, language TEXT NOT NULL
     );`);
-  const insert = db.prepare('INSERT INTO registrations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+  const columns = db.prepare('PRAGMA table_info(registrations)').all();
+  if (!columns.some(column => column.name === 'category')) {
+    db.exec("ALTER TABLE registrations ADD COLUMN category TEXT NOT NULL DEFAULT 'CONGREGATION'");
+  }
+  const insert = db.prepare('INSERT INTO registrations (reference, request_id, created_at, name, mobile, age, gender, area, category, devotee, participation, consent, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
   const find = db.prepare('SELECT * FROM registrations WHERE request_id = ?');
   const attempts = new Map();
   const cleanup = setInterval(() => { for (const [key, value] of attempts) if (value.until < Date.now()) attempts.delete(key); }, 60000);
@@ -66,7 +70,7 @@ export async function createApp({ dbPath = process.env.DB_PATH || resolve(root, 
           return json(res, 200, { reference: previous.reference });
         }
         const reference = `BM26-${randomUUID().slice(0, 8).toUpperCase()}`;
-        insert.run(reference, input.requestId, new Date().toISOString(), data.name, data.mobile, data.age, data.gender, data.area, data.devotee, data.participation, 1, data.language);
+        insert.run(reference, input.requestId, new Date().toISOString(), data.name, data.mobile, data.age, data.gender, data.area, data.category, data.devotee, data.participation, 1, data.language);
         return json(res, 201, { reference });
       }
       if (!['GET', 'HEAD'].includes(req.method)) return json(res, 405, { error: 'Method not allowed' }, { Allow: 'GET, HEAD' });

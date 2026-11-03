@@ -8,7 +8,7 @@ import { createApp } from '../server.mjs';
 import { copy, devotees, statistics } from '../public/content.js';
 import { validateRegistration } from '../public/validation.js';
 
-const registration = () => ({ requestId: randomUUID(), name: 'పరీక్ష భక్తుడు', mobile: '+91 98765 43210', age: 28, gender: 'male', area: 'విశాఖపట్నం', devotee: devotees[0][0], participation: 'evenings', consent: true, language: 'te' });
+const registration = () => ({ requestId: randomUUID(), name: 'పరీక్ష భక్తుడు', mobile: '+91 98765 43210', age: 28, gender: 'male', area: 'విశాఖపట్నం', category: 'CONGREGATION', devotee: devotees[0][0], participation: 'evenings', consent: true, language: 'te' });
 async function listen(options = {}) {
   const app = await createApp({ dbPath: ':memory:', ...options });
   await new Promise(resolve => app.listen(0, '127.0.0.1', resolve));
