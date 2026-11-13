@@ -10,13 +10,16 @@ export default async function handler(req, res) {
 
   const url = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return res.status(503).json({ error: 'Registration storage is not configured' });
+  if (!url || !serviceKey) return res.status(503).json({ error: 'Registration storage is not configured', missing: { SUPABASE_URL: !url, SUPABASE_SERVICE_ROLE_KEY: !serviceKey } });
 
   const endpoint = `${url.replace(/\/$/, '')}/rest/v1/book_marathon_registrations?select=id,created_at,name,whatsapp_mobile,age,gender,area,category,devotee,availability,language&order=created_at.desc&limit=5000`;
   const response = await fetch(endpoint, {
     headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
   });
-  if (!response.ok) return res.status(502).json({ error: 'Could not load registrations' });
+  if (!response.ok) {
+    const detail = await response.text();
+    return res.status(502).json({ error: 'Could not load registrations', detail: detail.slice(0, 300) });
+  }
 
   const rows = await response.json();
   res.setHeader('Cache-Control', 'no-store');

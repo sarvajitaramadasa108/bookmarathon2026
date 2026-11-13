@@ -49,8 +49,12 @@ async function load() {
   try {
     const response = await fetch('/api/responses', { headers: { 'x-admin-key': key }, cache: 'no-store' });
     if (response.status === 401) throw new Error('The admin key is not valid.');
-    if (!response.ok) throw new Error('Could not load responses. Check your Vercel environment variables.');
-    rows = (await response.json()).rows || []; renderTable();
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const missing = payload.missing ? ` Missing: ${Object.entries(payload.missing).filter(([, value]) => value).map(([name]) => name).join(', ')}.` : '';
+      throw new Error(`${payload.error || 'Could not load responses.'}${missing} ${payload.detail || ''}`.trim());
+    }
+    rows = payload.rows || []; renderTable();
     $('#status').textContent = `Last refreshed ${new Date().toLocaleString('en-IN')}`;
   } catch (error) { $('#status').textContent = error.message; }
   finally { $('#reload').disabled = false; }
